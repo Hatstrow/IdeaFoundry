@@ -4,7 +4,21 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 import keys as k
 import json
+import tweetFilter
 
+
+class TheFilter():
+	'''
+	Class for importing filter file of all filters
+	'''
+	self.FilterList = []
+	def file(self, fileName):
+		try:	
+			OriginalFile = open(fileName 'r')
+			for i in OriginalFile:
+				self.FilterList.append(i.rstrip())
+		except:
+			print( 'error, file not found')
 class Authenticater():
 	def Auth(self):
 		ConsumerKey = k.ConsumerKey
@@ -37,10 +51,10 @@ class StdOutListener(StreamListener):
 	def on_data(self, data):
 		try:
 			streamed_tweets = json.loads(data)
-			if streamed_tweets['text'][0:2] == 'RT':
-				return True
+			if streamed_tweets['text'][0:2] == 'RT ':
+				return True	#this will end bypass this tweet if its a retweet
 			else:	
-				if "extended_tweet" in streamed_tweets:
+				if "extended_tweet" in streamed_tweets: #gets full tweet either way 
 					text = streamed_tweets['extended_tweet']['full_text']
 					print('this is extended' + '' + text)
 				else:
@@ -49,20 +63,15 @@ class StdOutListener(StreamListener):
 
 				print(streamed_tweets)
 			
-			#for i in x.keys():
-				#print(i)
-			# print(text)
-			# Tweeter = streamed_tweets['user']['screen_name']
-			# theyareFrom = streamed_tweets['user']['location']
-			# print(Tweeter + "" + theyareFrom)
-			# time = streamed_tweets['timestamp_ms']
+			Tweeter = streamed_tweets['user']['screen_name']
+			theyareFrom = streamed_tweets['user']['location']
+			
+			timeStamp = streamed_tweets['created_at']
 			# print(time)
-			# if streamed_tweets['coordinates'] != 'null':
-			# 	Location = streamed_tweets['coordinates']
-			# print(Location)
-			# popularity = streamed_tweets['retweet_count'] + streamed_tweets['favorite_count']
-			# print(popularity)
-			# # print(Tweeter + Location + time + popularity + "" + text)
+			if streamed_tweets['coordinates'] != 'null':
+				Location = streamed_tweets['coordinates']
+			popularity = streamed_tweets['retweet_count'] + streamed_tweets['favorite_count']
+			
 
 			#with open(self.fetched_tweets_filename, 'a') as tf:
 			#	tf.write(data)		0
@@ -81,13 +90,10 @@ class StdOutListener(StreamListener):
 
 
 if __name__== "__main__":
-	hash_tag_list = ["dogs"]
+	hash_tag_list = TheFilter()
 	fetched_tweets_filename = "tweets.txt"
 
 	twitter_streamer = twitterStreamer()
-	while twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list):
-		print("hello")
-	
-
-
+	twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list.file(''))
+		
 
