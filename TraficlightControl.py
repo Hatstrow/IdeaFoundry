@@ -1,5 +1,6 @@
-import requests, datetime, os #machine #used with microPy
+import requests, os #machine #used with microPy
 from bs4 import BeautifulSoup
+from datetime import date
 
 
 class SiteScraper():
@@ -10,15 +11,22 @@ class SiteScraper():
 	def __init__(self,url,team):
 		self.url = url
 		self.team = team
+		self.time = date.today()
 	
 	def Schedule(self):
 		#gets information about the current schedule 
 		#to determine if app should be tracking live game data
-		f = open('teamData.txt', 'r')
-		text = f.read().split()
-		f.close()
-		
-		ScheduleUrl = self.url +'schedule/'
+		#f = open('teamData.txt', 'r')
+		text = 'x'#f.read().split()
+		#f.close()
+
+
+		if text == 'x':# today:
+			return True
+		else:
+			ScheduleUrl = self.url +'schedule/'
+			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
+			return Flase
 
 		return ScheduleUrl
 		
