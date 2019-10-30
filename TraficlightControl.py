@@ -11,22 +11,29 @@ class SiteScraper():
 	def __init__(self,url,team):
 		self.url = url
 		self.team = team
+		self.teamFile = team + 'TeamData.txt'
 		self.time = date.today()
 	
 	def Schedule(self):
 		#gets information about the current schedule 
 		#to determine if app should be tracking live game data
-		#f = open('teamData.txt', 'r')
-		text = 'x'#f.read().split()
-		#f.close()
+		if self.teamFile in os.listdir():
+			with open(self.teamFile, 'r') as f:
+				text = f.readlines()
+				f.close()
+		else:
+			temp = open(self.teamFile, 'w+')
+			temp.close()
+		
 
 
-		if text == 'x':# today:
+		if text == 't': #self.time:# today: I would like to compile the team schedule into the text document as rows and iterate through them
+		#this way I can determine if today is a gameday without even having to make a request
 			return True
 		else:
 			ScheduleUrl = self.url +'schedule/'
 			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
-			return Flase
+			return self.time
 
 		return ScheduleUrl
 		
