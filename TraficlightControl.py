@@ -33,7 +33,13 @@ class SiteScraper():
 		else:
 			ScheduleUrl = self.url +'schedule/'
 			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
-			return self.time
+			opponet = page.find_all(class_='TeamName')
+			GameTime = page.find_all(class_='CellGameDate')
+
+			with open(self.teamFile, 'a') as f:
+				for i in range(len(opponet)):
+					f.append(opponet[i] + ":" + GameTime[i] + '\n')
+				f.close()
 
 		return ScheduleUrl
 		
