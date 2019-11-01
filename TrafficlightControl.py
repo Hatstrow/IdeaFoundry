@@ -38,10 +38,10 @@ class SiteScraper():
 			with open(self.teamFile, 'r') as f:
 				schedule = f.readlines()
 
-		return ScheduleUrl
+		return Schedule
 		
 
-	def GameDay(self):
+	def IsGameDay(self):
 		#determines if today and time is game day
 		schedule = Schedule()
 
@@ -55,14 +55,23 @@ class SiteScraper():
 	def GetScore():
 		#gets live score from web
 		pass
-	pass
 
-class LightSwitchMode:
+def LightSwitchMode(input):
 	'''this will control what mode the light is in
 	Mode 1: Game day lights
 	Mode 2: Random light show
 	Mode 3: All on'''
-	pass
+	if input == 1: # this is just temp code until I figure out how I want to program this
+		return True
+	elif input == 2:
+		return True
+	else:
+		return True
+	return False
+
+	
+
+	
 
 class LightShow:
 	'''
