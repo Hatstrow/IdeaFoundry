@@ -34,7 +34,7 @@ class SiteScraper():
 
 			with open(self.teamFile, 'a+') as f:
 				for i in range(len(opponet)):
-					f.append(opponet[i] + ":" + GameTime[i] + '\n')
+					f.write(str(opponet[i]) + ":" + str(GameTime[i]) + '\n')
 			with open(self.teamFile, 'r') as f:
 				schedule = f.readlines()
 
@@ -52,21 +52,55 @@ class SiteScraper():
 			print('Not a game day')
 			return False
 
-	def FileCreateUpdate():
-		#creates or updates txt file with specific information
-		pass
-
 	def GetScore():
 		#gets live score from web
 		pass
 	pass
 
-class LightSwitch:
+class LightSwitchMode:
 	'''this will control what mode the light is in
 	Mode 1: Game day lights
 	Mode 2: Random light show
 	Mode 3: All on'''
 	pass
+
+class LightShow:
+	'''
+	this has the diffrent light shows that will be activiated 
+	dependent on light switch mode and specical modes for during game day
+	'''
+
+	def __init__(self):
+		pass
+
+	def AllOn(self):
+		pass
+
+	def funLightShow_1(self):
+		pass
+
+	def funLightShow_2(self):
+		pass
+
+	def funLightShow_3(self):
+		pass	
+
+	def GameLightShow_1(self):
+		pass
+
+	def GameLightShow_2(self):
+		pass
+
+	def GameLightShow_3(self):
+		pass
+
+
+
+
+
+
+
+
 
 
 
@@ -76,5 +110,7 @@ class main():
 	pass
 
 
-x = SiteScraper('https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/','OSU')
+x = SiteScraper('https://www.cbssports.com/nfl/teams/GB/green-bay-packers/','GBP')
+#https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
+#https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
 print(x.Schedule())
