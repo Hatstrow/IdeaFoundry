@@ -45,9 +45,16 @@ class SiteScraper():
 		return ScheduleUrl
 		
 
-	def GameDay():
+	def GameDay(self):
 		#determines if today and time is game day
-		pass
+		schedule = Schedule()
+
+		if self.time in schedule:
+			print('Game Day!!!!')
+			return True
+		else:
+			print('Not a game day')
+			return False
 
 	def FileCreateUpdate():
 		#creates or updates txt file with specific information
