@@ -19,28 +19,24 @@ class SiteScraper():
 		#to determine if app should be tracking live gasme datas
 		if self.teamFile in os.listdir():
 			with open(self.teamFile, 'r') as f:
-				text = f.readlines()
-
+				schedule = f.readlines()
 		else:
-			with open(self.teamFile, 'w+') as temp: #creates new file if none exists for that team
-				temp.write(self.time)
-				with open(self.teamFile, 'r') as temp:
-					text = temp.readlines()
+			schedule = []
 			
-
-		if self.time.year == text[0][0:4]: #self.time:# today: I would like to compile the team schedule into the text document as rows and iterate through them
+		if self.time.year in schedule: #self.time:# today: I would like to compile the team schedule into the text document as rows and iterate through them
 		#this way I can determine if today is a gameday without even having to make a request
-			return True
+			return schedule
 		else:
 			ScheduleUrl = self.url +'schedule/'
 			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
 			opponet = page.find_all(class_='TeamName')
 			GameTime = page.find_all(class_='CellGameDate')
 
-			with open(self.teamFile, 'a') as f:
+			with open(self.teamFile, 'a+') as f:
 				for i in range(len(opponet)):
 					f.append(opponet[i] + ":" + GameTime[i] + '\n')
-				f.close()
+			with open(self.teamFile, 'r') as f:
+				schedule = f.readlines()
 
 		return ScheduleUrl
 		
