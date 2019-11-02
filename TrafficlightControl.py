@@ -58,6 +58,19 @@ class SiteScraper():
 
 	def GetScore():
 		#gets live score from web
+		x = 0
+		teamSite = ''
+		while teamSite != 'GameTracker' or x == 20:
+			teamSite = BeautifulSoup(requests.get(self.url).content,'html.parser').find(class_='TeamMatchup-button').text.strip()
+			time.sleep(900)
+			if x == 19:
+				return False
+			x += 1
+		
+
+			
+
+
 
 		pass
 
