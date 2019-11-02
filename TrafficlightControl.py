@@ -54,6 +54,7 @@ class SiteScraper():
 
 	def GetScore():
 		#gets live score from web
+
 		pass
 
 def LightSwitchMode(input):
@@ -80,6 +81,16 @@ class LightShow:
 	'''
 
 	def __init__(self):
+		pass
+	def ErrorCodes(self,code):
+		self.code = code
+
+		if self.code == 404:
+			'''blink diffrent flasshes for code
+			ex FFFF  FFFF        FFFF  FFFF
+				4  0  4
+			'''
+			continue 
 		pass
 
 	def AllOn(self):
