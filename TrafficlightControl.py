@@ -28,6 +28,10 @@ class SiteScraper():
 			return schedule
 		else:
 			ScheduleUrl = self.url +'schedule/'
+			# try:
+			# 	req = requests.get(ScheduleUrl)
+			# except e as error:
+			# 	return LightShow.errorDoes(error)
 			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
 			opponet = [i.text.strip() for i in page.find_all(class_='TeamName')]
 			GameTime = [i.text.strip() for i in page.find_all(class_='CellGameDate')]
