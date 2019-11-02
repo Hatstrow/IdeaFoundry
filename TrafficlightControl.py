@@ -29,23 +29,23 @@ class SiteScraper():
 		else:
 			ScheduleUrl = self.url +'schedule/'
 			page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
-			opponet = page.find_all(class_='TeamName')
-			GameTime = page.find_all(class_='CellGameDate')
+			opponet = [i.text.strip() for i in page.find_all(class_='TeamName')]
+			GameTime = [i.text.strip() for i in page.find_all(class_='CellGameDate')]
 
 			with open(self.teamFile, 'a+') as f:
 				for i in range(len(opponet)):
-					f.write(str(opponet[i]) + ":" + str(GameTime[i]) + '\n')
+					f.write(str(GameTime[i]) + ":" + str(opponet[i]) +'\n')
 			with open(self.teamFile, 'r') as f:
 				schedule = f.readlines()
 
-		return Schedule
+		return schedule
 		
 
 	def IsGameDay(self):
 		#determines if today and time is game day
-		schedule = Schedule()
-
-		if self.time in schedule:
+		schedule = self.Schedule()
+		print (self.time.strftime('%b %d, %Y'))
+		if self.time.strftime('%b %d, %Y') in schedule:
 			print('Game Day!!!!')
 			return True
 		else:
@@ -122,4 +122,6 @@ class main():
 x = SiteScraper('https://www.cbssports.com/nfl/teams/GB/green-bay-packers/','GBP')
 #https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
 #https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
-print(x.Schedule())
+x.Schedule()
+
+print(x.IsGameDay())
