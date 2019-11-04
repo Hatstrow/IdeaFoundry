@@ -17,14 +17,14 @@ class SiteScraper():
 	def Schedule(self):
 		#gets information about the current schedule 
 		#to determine if app should be tracking live gasme datas
+
 		if self.teamFile in os.listdir():
 			with open(self.teamFile, 'r') as f:
 				schedule = f.readlines()
 		else:
 			schedule = []
 			
-		if self.time.year in schedule: #self.time:# today: I would like to compile the team schedule into the text document as rows and iterate through them
-		#this way I can determine if today is a gameday without even having to make a request
+		if any(str(self.time.year) in i for i in schedule): #compiles the team schedule into the text document as rows and iterate through them
 			return schedule
 		else:
 			ScheduleUrl = self.url +'schedule/'
@@ -38,18 +38,16 @@ class SiteScraper():
 
 			with open(self.teamFile, 'a+') as f:
 				for i in range(len(opponet)):
-					f.write(str(GameTime[i]) + ":" + str(opponet[i]) +'\n')
+					f.write(str(GameTime[i]) + " :" + str(opponet[i]) +'\n')
 			with open(self.teamFile, 'r') as f:
 				schedule = f.readlines()
-
 		return schedule
-		
 
 	def IsGameDay(self):
 		#determines if today and time is game day
 		schedule = self.Schedule()
-		print (self.time.strftime('%b %d, %Y'))
-		if self.time.strftime('%b %d, %Y') in schedule:
+		print(self.time.strftime('%b %#d, %Y'))
+		if any(str(self.time.strftime('%b %#d, %Y')) in i for i in schedule): #add '#' in strftime to eliminate leading 0
 			print('Game Day!!!!')
 			return True
 		else:
@@ -66,11 +64,6 @@ class SiteScraper():
 			if x == 19:
 				return False
 			x += 1
-		
-
-			
-
-
 
 		pass
 
@@ -107,7 +100,7 @@ class LightShow:
 			ex FFFF  FFFF        FFFF  FFFF
 				4  0  4
 			'''
-			continue 
+			pass 
 		pass
 
 	def AllOn(self):
