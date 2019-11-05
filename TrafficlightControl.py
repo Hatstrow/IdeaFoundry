@@ -69,7 +69,17 @@ class SiteScraper():
 			LiveURL ='https://www.cbssports.com' + BeautifulSoup(requests.get(self.url).content,'html.parser').find_all(class_='TeamMatchup-button')[0].find('a')['href']
 		pass
 
-def LightSwitchMode(input):
+
+class LightShow:
+	'''
+	this has the diffrent light shows that will be activiated 
+	dependent on light switch mode and specical modes for during game day
+	'''
+
+	def __init__(self):
+		pass
+
+	def LightSwitchMode(input):
 	'''this will control what mode the light is in
 	Mode 1: Game day lights
 	Mode 2: Random light show
@@ -82,18 +92,7 @@ def LightSwitchMode(input):
 		return True
 	return False
 
-	
 
-	
-
-class LightShow:
-	'''
-	this has the diffrent light shows that will be activiated 
-	dependent on light switch mode and specical modes for during game day
-	'''
-
-	def __init__(self):
-		pass
 	def ErrorCodes(self,code):
 		self.code = code
 
