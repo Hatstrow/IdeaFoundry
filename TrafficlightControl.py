@@ -60,11 +60,13 @@ class SiteScraper():
 		teamSite = ''
 		while teamSite != 'GameTracker' or x == 20:
 			teamSite = BeautifulSoup(requests.get(self.url).content,'html.parser').find(class_='TeamMatchup-button').text.strip()
+			teamDate = BeautifulSoup(requests.get(self.url).content,'html.parser').find(class_='TeamMatchup-date').text.strip()
 			time.sleep(900)
 			if x == 19:
 				return False
 			x += 1
-
+		if teamSite == 'GameTracker':
+			LiveURL ='https://www.cbssports.com' + BeautifulSoup(requests.get(self.url).content,'html.parser').find_all(class_='TeamMatchup-button')[0].find('a')['href']
 		pass
 
 def LightSwitchMode(input):
