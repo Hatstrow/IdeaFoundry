@@ -8,11 +8,12 @@ class SiteScraper():
 	version of the schedule. This will update maybe only once a year. 
 	This will help reduce the amount of requests made to the website
 	https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/   https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/schedule/'''
-	def __init__(self,url,team):
+	def __init__(self,url,team,year):
 		self.url = url
 		self.team = team
-		self.teamFile = team + 'TeamData.txt'
+		self.teamFile = team +'_'+date.today().year+'_TeamData.txt'
 		self.time = date.today()
+		self.year = year
 	
 	def Schedule(self):
 		#gets information about the current schedule 
@@ -43,6 +44,32 @@ class SiteScraper():
 				schedule = f.readlines()
 		return schedule
 
+	def Schedule_Yahoo(self):
+		#gets information about the current schedule 
+		#to determine if app should be tracking live gasme datas
+
+		if self.teamFile in os.listdir():
+			with open(self.teamFile, 'r') as f:
+				schedule = f.readlines()	
+		else:
+			ScheduleUrl = self.url +'schedule/?season='+self.year
+			
+			soup = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
+			opponet = [i.text.strip() for i in soup.find_all(class_='')]   #gives the oppnet of that game
+			GameTime = [i.text.strip() for i in soup.find_all(class_='')]  #gives date and time of game
+			GameLink = [i.text.strip() for i in soup.find_all(class_='')]  #gives link to the live page
+			GameFeild = [i.text.strip() for i in soup.find_all(class_='')] #gives if vs, or @
+
+
+			with open(self.teamFile, 'a+') as f:
+				for i in range(len(opponet)):
+					f.write(str(GameTime[i]) + " :" + str(opponet[i]) +'\n')
+			with open(self.teamFile, 'r') as f:
+				schedule = f.readlines()
+
+		return schedule
+
+
 	def IsGameDay(self):
 		#determines if today and time is game day
 		schedule = self.Schedule()
@@ -62,16 +89,8 @@ class SiteScraper():
 
 		x = 0
 		teamSite = ''
-		while teamSite != 'GameTracker' or x == 20:
-			teamSite = BeautifulSoup(requests.get(self.url).content,'html.parser').find(class_='TeamMatchup-button').text.strip()
-			teamDate = BeautifulSoup(requests.get(self.url).content,'html.parser').find(class_='TeamMatchup-date').text.strip()
-			time.sleep(900)
-			if x == 19:
-				return False
-			x += 1
-		if teamSite == 'GameTracker':
-			LiveURL ='https://www.cbssports.com' + BeautifulSoup(requests.get(self.url).content,'html.parser').find_all(class_='TeamMatchup-button')[0].find('a')['href']
-		pass
+		LiveURL ='https://www.cbssports.com' + BeautifulSoup(requests.get(self.url).content,'html.parser').find_all(class_='TeamMatchup-button')[0].find('a')['href']
+		
 
 
 class LightShow:
@@ -145,7 +164,7 @@ class main():
 	pass
 
 
-x = SiteScraper('https://www.cbssports.com/nfl/teams/GB/green-bay-packers/','GBP')
+x = SiteScraper('https://sports.yahoo.com/ncaaf/teams/ohio-st/schedule/?season=2019','ohio-st','2019')
 #https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
 #https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
 x.Schedule()
