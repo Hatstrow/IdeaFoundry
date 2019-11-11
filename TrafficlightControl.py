@@ -56,6 +56,10 @@ class SiteScraper():
 
 	def GetScore():
 		#gets live score from web
+		#I can check the "live" web site if its showing actual live results instead of checking 
+		#the the team website for for the live link, I would/could check for if times are the same
+		#use Yahoo! https://sports.yahoo.com/nfl/minnesota-vikings-dallas-cowboys-20191110006/
+
 		x = 0
 		teamSite = ''
 		while teamSite != 'GameTracker' or x == 20:
@@ -74,23 +78,23 @@ class LightShow:
 	'''
 	this has the diffrent light shows that will be activiated 
 	dependent on light switch mode and specical modes for during game day
-	'''
+	jjjj'''
 
 	def __init__(self):
 		pass
 
 	def LightSwitchMode(input):
-	'''this will control what mode the light is in
-	Mode 1: Game day lights
-	Mode 2: Random light show
-	Mode 3: All on'''
-	if input == 1: # this is just temp code until I figure out how I want to program this
-		return True
-	elif input == 2:
-		return True
-	else:
-		return True
-	return False
+		'''this will control what mode the light is in
+		Mode 1: Game day lights
+		Mode 2: Random light show
+		Mode 3: All on'''
+		if input == 1: # this is just temp code until I figure out how I want to program this
+			return True
+		elif input == 2:
+			return True
+		else:
+			return True
+		return False
 
 
 	def ErrorCodes(self,code):
