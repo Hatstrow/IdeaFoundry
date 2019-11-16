@@ -92,10 +92,9 @@ class SiteScraper():
 
 	def IsGameDay(self):
 		#determines if today and time is game day
-		schedule = self.Schedule_Yahoo()
-		print(self.time.strftime('%b %#d, %Y'))
+		print("todays date is: " + self.time.strftime('%b %#d, %Y'))
 		index = 0
-		for i in schedule:
+		for i in self.Schedule_Yahoo():
 			#if any(str(self.time.strftime('%b %#d, %Y')) in i for i in schedule): #add '#' in strftime to eliminate leading 0
 			if str(self.time.strftime('%b %#d, %Y')) in i:
 				print('Game Day!!!!')
