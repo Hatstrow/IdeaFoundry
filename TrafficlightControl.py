@@ -17,34 +17,6 @@ class SiteScraper():
 		self.time = date.today()
 		self.year = year
 	
-	# def Schedule(self):
-	# 	#gets information about the current schedule 
-	# 	#to determine if app should be tracking live gasme datas
-
-	# 	if self.teamFile in os.listdir():
-	# 		with open(self.teamFile, 'r') as f:
-	# 			schedule = f.readlines()
-	# 	else:
-	# 		schedule = []
-			
-	# 	if any(str(self.time.year) in i for i in schedule): #compiles the team schedule into the text document as rows and iterate through them
-	# 		return schedule
-	# 	else:
-	# 		ScheduleUrl = self.url +'schedule/'
-	# 		# try:
-	# 		# 	req = requests.get(ScheduleUrl)
-	# 		# except e as error:
-	# 		# 	return LightShow.errorDoes(error)
-	# 		page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
-	# 		opponet = [i.text.strip() for i in page.find_all(class_='TeamName')]
-	# 		GameTime = [i.text.strip() for i in page.find_all(class_='CellGameDate')]
-
-	# 		with open(self.teamFile, 'a+') as f:
-	# 			for i in range(len(opponet)):
-	# 				f.write(str(GameTime[i]) + " :" + str(opponet[i]) +'\n')
-	# 		with open(self.teamFile, 'r') as f:
-	# 			schedule = f.readlines()
-	# 	return schedule
 	def GameLinks(self):
 		Url =self.url_yahoo +'schedule/?season='+self.year
 		soup = BeautifulSoup(requests.get(Url).content, 'html.parser')
@@ -89,7 +61,6 @@ class SiteScraper():
 
 		return schedule
 
-
 	def IsGameDay(self):
 		#determines if today and time is game day
 		print("todays date is: " + self.time.strftime('%b %#d, %Y'))
@@ -98,7 +69,6 @@ class SiteScraper():
 			#if any(str(self.time.strftime('%b %#d, %Y')) in i for i in schedule): #add '#' in strftime to eliminate leading 0
 			if str(self.time.strftime('%b %#d, %Y')) in i:
 				print('Game Day!!!!')
-
 				return True, index
 			else:
 				index +=1
@@ -110,22 +80,47 @@ class SiteScraper():
 		#I can check the "live" web site if its showing actual live results instead of checking 
 		#the the team website for for the live link, I would/could check for if times are the same
 		#use Yahoo! https://sports.yahoo.com/nfl/minnesota-vikings-dallas-cowboys-20191110006/
-		tf,index = self.IsGameDay()
-		if tf == True:
+		ifTrue,index = self.IsGameDay()
+		if ifTrue == True:
 			link,feild = self.GameLinks()
 			gametime =""
 			cycle = 0
-			urlLink = 'https://sports.yahoo.com//' + str(link[index])
+			goodguys = '0'
+			badguys = '0'
+			urlLink = 'https://sports.yahoo.com/' + str(link[index])
 			print(link[index])
-			if feild == "@":
-				scoreAttr = ""
+			#GameBar = BeautifulSoup(urlLink,'lxml').find_all(class_='scrollingContainer')[1]# this contains the live game ribbon
+			if '@' in feild[index]:
+				ggScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(end) Px(10px)" #good team
+				bgScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(start) Px(10px)"#home team
+				print('away')
 			else:
-				scoreAttr = ""
-			while gametime != 'Final' or cycles<10800:#at 5sec/cycle would be about 15 hours
+				bgScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(end) Px(10px)" #bad team
+				ggScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(start) Px(10px)" #good team
+				print('home')
+
+			while gametime != 'Final' or cycles<10800 or gametime == False:#at 5sec/cycle would be about 15 hours
 				score = BeautifulSoup(requests.get(urlLink).content,'lxml')
 				cycle+=1
 				print(cycle)
-				print(score.find_all(class_='Fw(500)')[4].text)
+				try:
+					ggNewScore = score.find_all(class_='scrollingContainer')[1].find_all(class_=ggScoreAttr)[0].text
+					bgNewScore = score.find_all(class_='scrollingContainer')[1].find_all(class_=bgScoreAttr)[0].text
+				except:
+					print("half-Time or game hasn't started") 
+					continue
+
+				if ggNewScore > goodguys:
+					goodguys = ggNewScore
+					print('SCORE!!!')
+				if bgNewScore > badguys or goodguys< ggNewScore:
+					goodguys = ggNewScore
+					badguys = bgNewScore
+					print('BAD SCORE :( ')
+				
+				print(ggNewScore)
+				print(bgNewScore)
+				print('-------------------')
 				ttim.sleep(5)
 			
 		else:
@@ -214,3 +209,51 @@ x.Schedule_Yahoo()
 
 print(x.IsGameDay())
 x.GetScore()
+
+
+
+
+
+
+
+
+
+
+
+
+
+#__________________________________________________________
+#|---------------------------------------------------------|
+#|this is old code, I want to hang onto incase I need it   |
+#|_________________________________________________________|
+
+
+
+# def Schedule(self):
+	# 	#gets information about the current schedule 
+	# 	#to determine if app should be tracking live gasme datas
+
+	# 	if self.teamFile in os.listdir():
+	# 		with open(self.teamFile, 'r') as f:
+	# 			schedule = f.readlines()
+	# 	else:
+	# 		schedule = []
+			
+	# 	if any(str(self.time.year) in i for i in schedule): #compiles the team schedule into the text document as rows and iterate through them
+	# 		return schedule
+	# 	else:
+	# 		ScheduleUrl = self.url +'schedule/'
+	# 		# try:
+	# 		# 	req = requests.get(ScheduleUrl)
+	# 		# except e as error:
+	# 		# 	return LightShow.errorDoes(error)
+	# 		page = BeautifulSoup(requests.get(ScheduleUrl).content, 'html.parser')
+	# 		opponet = [i.text.strip() for i in page.find_all(class_='TeamName')]
+	# 		GameTime = [i.text.strip() for i in page.find_all(class_='CellGameDate')]
+
+	# 		with open(self.teamFile, 'a+') as f:
+	# 			for i in range(len(opponet)):
+	# 				f.write(str(GameTime[i]) + " :" + str(opponet[i]) +'\n')
+	# 		with open(self.teamFile, 'r') as f:
+	# 			schedule = f.readlines()
+	# 	return schedule
