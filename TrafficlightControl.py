@@ -1,4 +1,4 @@
-import requests, os
+import requests, os, socket
 import time as ttim #machine #used with microPy
 from bs4 import BeautifulSoup
 from datetime import date
@@ -9,13 +9,15 @@ class SiteScraper():
 	version of the schedule. This will update maybe only once a year. 
 	This will help reduce the amount of requests made to the website
 	https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/   https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/schedule/'''
-	def __init__(self,url_y,url_c,team,year):
+	def __init__(self,url_y,url_c,team,year,ipAdress, PORT):
 		self.url_cbs = url_c
 		self.url_yahoo = url_y
 		self.team = team
 		self.teamFile = team +'_'+str(date.today().year)+'_TeamData.txt'
 		self.time = date.today()
 		self.year = year
+		self.ipAdress = ipAdress
+		self.PORT = PORT
 	
 	def GameLinks(self):
 		Url =self.url_yahoo +'schedule/?season='+self.year
@@ -75,6 +77,16 @@ class SiteScraper():
 		print('Not a game day')
 		return False, index
 
+	def PushScore(self, WhoScore):
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.bind((self.ipAdress,1235))
+		s.listen(5)
+		
+		clientsocket, address = s.accept()
+		clientsocket.send(bytes(str(WhoScore), 'utf-8'))
+		clientsocket.close()
+
+
 	def GetScore(self):
 		#gets live score from web
 		#I can check the "live" web site if its showing actual live results instead of checking 
@@ -98,6 +110,7 @@ class SiteScraper():
 				bgScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(end) Px(10px)" #bad team
 				ggScoreAttr = "Fz(48px) D(b) My(0px) Lh(56px) Or(3) Fw(500) Ta(start) Px(10px)" #good team
 				print('home')
+			score = BeautifulSoup(requests.get(urlLink).content,'lxml')
 
 			while gametime != 'Final' or cycles<10800 or gametime == False:#at 5sec/cycle would be about 15 hours
 				score = BeautifulSoup(requests.get(urlLink).content,'lxml')
@@ -112,21 +125,26 @@ class SiteScraper():
 
 				if ggNewScore > goodguys:
 					goodguys = ggNewScore
+					self.PushScore('1')
 					print('SCORE!!!')
+					
+					
 				if bgNewScore > badguys or goodguys< ggNewScore:
 					goodguys = ggNewScore
 					badguys = bgNewScore
+					self.PushScore('2')
 					print('BAD SCORE :( ')
-				
+
 				print(ggNewScore)
 				print(bgNewScore)
 				print('-------------------')
 				ttim.sleep(5)
-			
+
 		else:
 			return 0
 
 		pass
+
 
 class LightShow():
 		
@@ -187,22 +205,13 @@ class LightShow():
 		pass
 
 
-
-
-
-
-
-
-
-
-
 class main():
 	while True:
 		break
 	pass
 
 
-x = SiteScraper('https://sports.yahoo.com/ncaaf/teams/ohio-st/','https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/','ohio-st','2019')
+x = SiteScraper('https://sports.yahoo.com/ncaaf/teams/ohio-st/','https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/','ohio-st','2019','192.168.1.10', 1234) #socket.gethostname())
 #https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
 #https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
 x.Schedule_Yahoo()
