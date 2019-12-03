@@ -1,0 +1,11 @@
+cmd for ampy to push files to nodeMCU
+
+set AMPY_PORT = COM3
+
+ampy put file.py #put file into controller
+ampy put file.py newName.py # puts and renames file to  controller
+ampy get file.py
+ampy get file.py newName.py
+
+esptool.py erase_flash
+esptool.py --port com3 --baud 460800 write_flash --flash_size=detect 0 esp8266-20190529-v1.11.bin
