@@ -9,9 +9,9 @@ class SiteScraper():
 	version of the schedule. This will update maybe only once a year. 
 	This will help reduce the amount of requests made to the website
 	https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/   https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/schedule/'''
-	def __init__(self,url_y,url_c,team,year,ipAdress, PORT):
-		self.url_cbs = url_c
-		self.url_yahoo = url_y
+	def __init__(self,team,year,ipAdress, PORT):
+		self.url_cbs = 'https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/'
+		self.url_yahoo = 'https://sports.yahoo.com/ncaaf/teams/ohio-st/schedule/?season='
 		self.team = team
 		self.teamFile = team +'_'+str(date.today().year)+'_TeamData.txt'
 		self.time = date.today()
@@ -20,7 +20,10 @@ class SiteScraper():
 		self.PORT = PORT
 	
 	def GameLinks(self):
-		Url =self.url_yahoo +'schedule/?season='+self.year
+		'''
+		Gets the link to the live web page of the game on Yahoo sports
+		'''
+		Url =self.url_yahoo+self.year
 		soup = BeautifulSoup(requests.get(Url).content, 'html.parser')
 		Games_yahoo = soup.find_all(class_='Bgc(bg-mod) Bgc(secondary):h Pos(r) H(45px) Cur(p)')
 		GameLinks = [i.a['href'] for i in Games_yahoo]
@@ -49,32 +52,27 @@ class SiteScraper():
 			GameTime = [i.text.strip() for i in soup2_CBS.find_all(class_='CellGameDate')]
 
 			links,feild = self.GameLinks()
-			print(len(GameTime))
-			print(len(feild))
-			print(len(links))
-			print(len(Opponet))
 
 			with open(self.teamFile, 'a+') as f:
 				for i in range(len(Opponet)):
 					f.write(str(GameTime[i]) + " :" + str(Opponet[i]) + '  '+ feild[i] + '   ' + links[i] + '\n')
 
-			with open(self.teamFile, 'r') as f:
-				schedule = f.readlines()
+			#with open(self.teamFile, 'r') as f: # this wasn't nessesary as I can just generate the info from the file. This would save memeory I think
+				#schedule = f.readlines()
 
-		return schedule
+		return True #schedule
 
 	def IsGameDay(self):
 		#determines if today and time is game day
 		print("todays date is: " + self.time.strftime('%b %#d, %Y'))
 		index = 0
-		for i in self.Schedule_Yahoo():
+		#for i in self.Schedule_Yahoo():
+		for i in open(self.teamFile, 'r'): 
 			#if any(str(self.time.strftime('%b %#d, %Y')) in i for i in schedule): #add '#' in strftime to eliminate leading 0
 			if str(self.time.strftime('%b %#d, %Y')) in i:
-				print('Game Day!!!!')
 				return True, index
 			else:
 				index +=1
-		print('Not a game day')
 		return False, index
 
 	def PushScore(self, WhoScore):
@@ -93,6 +91,10 @@ class SiteScraper():
 		#the the team website for for the live link, I would/could check for if times are the same
 		#use Yahoo! https://sports.yahoo.com/nfl/minnesota-vikings-dallas-cowboys-20191110006/
 		ifTrue,index = self.IsGameDay()
+		if ifTrue == True:
+			print("Its Game Day Baby!!!!")
+		else:
+			print('Sorry, Not Game Day :(')
 		if ifTrue == True:
 			link,feild = self.GameLinks()
 			gametime =""
@@ -211,7 +213,7 @@ class main():
 	pass
 
 
-x = SiteScraper('https://sports.yahoo.com/ncaaf/teams/ohio-st/','https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/','ohio-st','2019','192.168.1.10', 1234) #socket.gethostname())
+x = SiteScraper('ohio-st','2019','192.168.1.10', 1234) #socket.gethostname())
 #https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
 #https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
 x.Schedule_Yahoo()
