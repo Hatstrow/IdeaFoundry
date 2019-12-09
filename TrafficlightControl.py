@@ -99,7 +99,7 @@ class SiteScraper():
 			link,feild = self.GameLinks()
 			gametime =""
 			cycle = 0
-			goodguys = '0'
+			goodguys = ''
 			badguys = '0'
 			urlLink = 'https://sports.yahoo.com/' + str(link[index])
 			print(link[index])
@@ -123,8 +123,15 @@ class SiteScraper():
 					bgNewScore = score.find_all(class_='scrollingContainer')[1].find_all(class_=bgScoreAttr)[0].text
 				except:
 					print("half-Time or game hasn't started") 
+					ttim .sleep(20)
 					continue
-
+				ttim.sleep(20)
+				print('----------------')
+				print('before if')
+				print(ggNewScore)
+				print(goodguys)
+				print(badguys)
+				print(bgNewScore)
 				if ggNewScore > goodguys:
 					goodguys = ggNewScore
 					self.PushScore('1')
@@ -136,8 +143,10 @@ class SiteScraper():
 					badguys = bgNewScore
 					self.PushScore('2')
 					print('BAD SCORE :( ')
-
+				print('after if')
+				print(goodguys)
 				print(ggNewScore)
+				print(badguys)
 				print(bgNewScore)
 				print('-------------------')
 				ttim.sleep(5)
