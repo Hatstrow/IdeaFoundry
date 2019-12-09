@@ -3,8 +3,9 @@ try:
 except:
   import socket
 
-from machine import Pin
+#from machine import Pin
 import network, time
+import webrepl
 
 import esp
 esp.osdebug(None)
@@ -25,6 +26,6 @@ while station.isconnected() == False:
 
 print('Connection successful')
 print(station.ifconfig())
-
-led = Pin(5, Pin.OUT)
-led2= Pin(2, Pin.OUT)
+webrepl.start()
+#led = Pin(5, Pin.OUT)
+#led2= Pin(2, Pin.OUT)
