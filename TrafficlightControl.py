@@ -216,19 +216,15 @@ class LightShow():
 		pass
 
 
-class main():
-	while True:
-		break
-	pass
 
+if __name__ == '__main__':
+	x = SiteScraper('ohio-st','2019','192.168.1.10', 1234) #socket.gethostname())
+	#https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
+	#https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
+	x.Schedule_Yahoo()
 
-x = SiteScraper('ohio-st','2019','192.168.1.10', 1234) #socket.gethostname())
-#https://www.cbssports.com/college-football/teams/OHIOST/ohio-state-buckeyes/
-#https://www.cbssports.com/nfl/teams/GB/green-bay-packers/schedule/
-x.Schedule_Yahoo()
-
-print(x.IsGameDay())
-x.GetScore()
+	print(x.IsGameDay())
+	x.GetScore()
 
 
 
